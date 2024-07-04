@@ -161,9 +161,23 @@ namespace WebChatAPI.Controllers
             return null;
         }
 
+        [HttpPost("ResetPassword")]
+        public string ResetPassword(ResetPasswordForm req)
+        {
+            using var connection = DbConnect.New();
+            var data = connection.ExecuteAndRead($"SELECT * FROM Users WHERE Login = '{req.Login}'");
+            if (!data.HasData)
+                return null;
+
+            connection.Execute($"UPDATE Users SET Password = 123 WHERE Login = '{req.Login}'");
+            return "123";
+        }
+
         private NoAuthResultModel NoAuthResult()
         {
             return new NoAuthResultModel();
         }
+
+
     }
 }
